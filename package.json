@@ -18,6 +18,7 @@
     "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "request": "^2.88.2"
   }
 }

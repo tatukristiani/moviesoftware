@@ -1,0 +1,93 @@
+.btn-group {
+    width: 100%;
+}
+.btn-group button {
+    width: 33.3%;
+    background-color: #4CAF50; /* Green background */
+    border: 1px solid green; /* Green border */
+    color: white; /* White text */
+    padding: 10px 24px; /* Some padding */
+    cursor: pointer; /* Pointer/hand icon */
+    float: left; /* Float the buttons side by side */
+}
+
+/* Add a background color on hover */
+.btn-group button:hover {
+    background-color: #3e8e41;
+}
+
+/* Sites headline div */
+.headline {
+    width: 100%;
+    margin: 40px;
+}
+
+/* Sites h1 headline */
+#headline {
+    text-align: center;
+}
+
+/* selected button/active button on home page */
+.btn-group .btn-selected {
+    background-color: #3e8e41;
+}
+
+ul {
+    list-style: none;
+}
+
+#movieList img {
+    width: 240px;
+    height: 320px;
+}
+
+#search-results img {
+    width: 240px;
+    heigth: 320px;
+    transition: .5s ease;
+}
+
+figure:hover .image {
+    opacity: 0.3;
+}
+
+figure:hover .imageInfo {
+    opacity: 1;
+}
+
+figure:hover .imageText {
+    opacity: 0;
+}
+
+figure {
+    position: relative;
+    width: fit-content;
+    overflow: hidden;
+}
+
+figure .imageText {
+    position: absolute;
+    background: rgb(230,230,230);
+    background: rgba(230,230,230, 0.6);
+    margin: 0;
+    padding: 8px;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    text-align: center;
+}
+
+figure .imageInfo {
+    transition: .5s ease;
+    opacity: 0;
+    position: absolute;
+    margin: 5px;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    overflow: auto;
+}
+
+.imageInfo h1 {
+
+}
