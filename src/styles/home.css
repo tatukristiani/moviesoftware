@@ -43,7 +43,7 @@ ul {
 
 #search-results img {
     width: 240px;
-    heigth: 320px;
+    height: 320px;
     transition: .5s ease;
 }
 
@@ -55,27 +55,12 @@ figure:hover .imageInfo {
     opacity: 1;
 }
 
-figure:hover .imageText {
-    opacity: 0;
-}
-
 figure {
     position: relative;
     width: fit-content;
     overflow: hidden;
 }
 
-figure .imageText {
-    position: absolute;
-    background: rgb(230,230,230);
-    background: rgba(230,230,230, 0.6);
-    margin: 0;
-    padding: 8px;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    text-align: center;
-}
 
 figure .imageInfo {
     transition: .5s ease;
@@ -88,6 +73,31 @@ figure .imageInfo {
     overflow: auto;
 }
 
-.imageInfo h1 {
+figure .search-movie-button {
+    position: absolute;
+    bottom: 0;
+    left: 1%;
+    right: 1%;
+    width: 98%;
+    display: inline-block;
+    padding:0.46em 1.6em;
+    border:0.1em solid #000000;
+    margin:0 0.2em 0.2em 0;
+    border-radius:0.12em;
+    box-sizing: border-box;
+    text-decoration:none;
+    font-family:'Roboto',sans-serif;
+    font-weight:300;
+    color:#000000;
+    text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35);
+    background-color:#FFFFFF;
+    text-align:center;
+    transition: all 0.15s;
+    background-color: #42cc8c;
+}
 
+figure .search-movie-button:hover {
+    text-shadow: 0 0 2em rgba(255,255,255,1);
+    color:#FFFFFF;
+    border-color:#FFFFFF;
 }

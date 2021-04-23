@@ -37,6 +37,7 @@
 
   let div = document.getElementById("search-results");
 
+  // Function that send a http-request to the server and tries to find a movie with the users inputs.
   function searchMovie() {
     let movieName = document.getElementById('movie').value;
     let movieYear = document.getElementById('year').value;
@@ -45,7 +46,7 @@
     let xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
       if (xhr.readyState == 4 && xhr.status == 200) {
-        json = xhr.responseText;
+        var json = xhr.responseText;
         console.log(json);
         if (json.length > 0) {
           showSearchResults(json);
@@ -60,49 +61,83 @@
       }
     };
 
-    let uri = "http://localhost:8080/api/search?name=" + movieName + "&year=" + movieYear;
+    let uri = "http://localhost:8080/search?name=" + movieName + "&year=" + movieYear;
     console.log("URI: " + uri);
 
     xhr.open('GET', uri, true);
     xhr.send();
   }
 
+
+  let cacheMovieData = null;
+
+  // This function shows the results of users input. Currently only shows 1 search result per successful search.
   function showSearchResults(json) {
     while(div.hasChildNodes()) {
       div.removeChild(div.firstChild);
     }
-    // Create unordered list and parse json data.
-    let ul = document.createElement('ul');
     let parsedJson = JSON.parse(json);
+    cacheMovieData = parsedJson;
 
-    // Create list item and figure
-    let li = document.createElement('li');
-    let figure = document.createElement("figure");
+    // If response field has false then it means there are no search results.
+    if(parsedJson.Response.includes("False"))  {
+      let para = document.createElement("p");
+      para.innerHTML = "No movies were found! Try to find something else instead.";
+      div.appendChild(para);
+    }
+    else {
 
-    // Create img/image text and add their values
-    let img = document.createElement('img');
-    img.src = parsedJson.Poster;
-    img.alt = parsedJson.Title;
-    img.className = "image";
-    let imageText = document.createElement("div");
-    imageText.innerHTML = parsedJson.Title;
-    imageText.className = "imageText";
+      // Create unordered list and parse json data.
+      let ul = document.createElement('ul');
 
-    // Create movie information
-    let movieInfo = document.createElement("div");
-    movieInfo.innerHTML = jsonToMovieInfoString(parsedJson);
-    movieInfo.className = "imageInfo";
 
-    // Add all to their parent nodes
-    figure.appendChild(img);
-    figure.appendChild(imageText);
-    figure.appendChild(movieInfo);
-    li.appendChild(figure);
-    ul.appendChild(li);
+      // Create list item and figure
+      let li = document.createElement('li');
+      let figure = document.createElement("figure");
 
-    div.appendChild(ul);
+      // Create img/image text and add their values
+      let img = document.createElement('img');
+
+      // If a movies was found, but it has only couple informations about the movie and it doesn't have a poster -> we use a default one.
+      if(parsedJson.Poster.includes("N/A")) {
+        img.src = "../images/no-image-available-icon-10.jpg";
+      }
+      else {
+        img.src = parsedJson.Poster;
+      }
+      img.alt = parsedJson.Title;
+      img.className = "image";
+
+      // Create movie information
+      let movieInfo = document.createElement("div");
+      movieInfo.innerHTML = jsonToMovieInfoString(parsedJson);
+      movieInfo.className = "imageInfo";
+
+      // Create a button for adding to "My movies"
+      let button = document.createElement("button");
+      button.className = "search-movie-button";
+      button.innerHTML = "I've seen this!";
+
+      let buttonDb = document.createElement("button");
+      buttonDb.className = "addToDatabaseButton";
+      buttonDb.innerHTML = "Add to database";
+      buttonDb.addEventListener("click", addMovieToDatabase);
+
+
+      // Add all to their parent nodes
+      figure.appendChild(img);
+      figure.appendChild(movieInfo);
+      figure.appendChild(button);
+      figure.appendChild(buttonDb);
+      li.appendChild(figure);
+      ul.appendChild(li);
+
+      div.appendChild(ul);
+
+    }
   }
 
+  // Transfers JSON-data to a html string that displays the data in a nice way.
   function jsonToMovieInfoString(parsedJson) {
     let title = parsedJson.Title;
     let year = parsedJson.Year;
@@ -113,6 +148,30 @@
         "<p>Runtime: " + runtime + "</p><br>" +
         "<p>Genre: " + genre + "</p><br>";
     return info;
+  }
+
+  function addMovieToDatabase() {
+    if(cacheMovieData != null) {
+      let movieData = JSON.stringify(cacheMovieData);
+      console.log("movie data: " + movieData);
+      let xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+          var response = xhr.responseText;
+          console.log(response);
+          alert(response);
+        }
+      };
+
+      let uri = "http://localhost:8080/saveDataToDb"
+
+      xhr.open('POST', uri, true);
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.send(movieData);
+    }
+    else {
+      console.log("There is no point to save nothing.")
+    }
   }
 </script>
 <script>

@@ -18,14 +18,6 @@
         <button class="btn-not-selected" onclick="openMyMovies()">My movies</button>
     </div>
     <div id="movieList" class="listOfMovies"></div>
-
-    <div>
-        <p id="para">Testing button work with server</p>
-        <p id="imageid"> This is images ID</p>
-        <img src="" alt="movie" height="300" width="300" id="movie">
-        <button onclick="getMovie()">Get movie by clicking</button>
-    </div>
-
 </div>
 </body>
 <script>
@@ -51,54 +43,6 @@
 
   })();
 
-
-  // Test
-  function getMovie() {
-    let xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        json = xmlhttp.responseText;
-        console.log(json);
-        showMovie(json);
-
-      }
-    };
-
-      xmlhttp.open("GET", "http://localhost:8080/search/movie", true);
-      xmlhttp.send();
-  }
-
-
-  // Test
-  function changeWebsite() {
-    let xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        json = xmlhttp.responseText;
-        console.log(json);
-        showJson(json);
-      } else {
-
-
-      }
-
-    };
-    xmlhttp.open("GET", "http://localhost:8080/search", true);
-    xmlhttp.send();
-  }
-
-  function showJson(json) {
-    var para = document.getElementById("para");
-    para.innerHTML = json;
-  }
-
-  // Shows movies (joker) title and image.
-  function showMovie(movie) {
-    var para = document.getElementById("para");
-    var parsed = JSON.parse(movie);
-    para.innerHTML = parsed.Title;
-    document.getElementById("movie").src = parsed.Poster;
-  }
 
   // Function that populates movieList on homepage
   function populateMovieList(json) {

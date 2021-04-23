@@ -19,26 +19,24 @@ sqlCon.connect(function(err) {
   console.log("Connected to MySQL!");
 });
 
-// eslint-disable-next-line no-unused-vars
 const query = util.promisify(sqlCon.query).bind(sqlCon);
 
 const app = express();
 app.use(cors()); // Allow Access from all domains
 
 var bodyParser = require('body-parser');
-// eslint-disable-next-line no-unused-vars
 var urlencodedParser = bodyParser.urlencoded({extended: false});
 app.use(bodyParser.urlencoded({extended: false }));
 app.use(bodyParser.json());
 
 
-// Sites that are listed
 
 app.get('/', function(req,res) {
   console.log("Got a GET request for the homepage");
 
   res.send("Hello!");
 })
+
 
 // Home page, displays hard coded movies from database. Data from external API:s database.
 app.get('/home', function(req,res) {
@@ -57,7 +55,8 @@ app.get('/home', function(req,res) {
 
 });
 
-app.get('/api/search', function(req,res) {
+// Search a movie fron omdbAPI with a movie name/year. Sends only one movie per search.
+app.get('/search', function(req,res) {
   console.log("Searching movie from external API");
   var q = url.parse(req.url, true).query;
   var movieName = q.name;
@@ -84,6 +83,7 @@ app.get('/api/search', function(req,res) {
   }
 })
 
+
 // TEST
 app.get('/search', function(req, res) {
   console.log("Switched to search mode.");
@@ -99,6 +99,63 @@ app.get('/search/movie', function(req, res) {
     res.send(body);
   });
 })
+
+// Save data to database (Authors tool for adding movies)
+app.post('/saveDataToDb', urlencodedParser, function(req, res) {
+  console.log("Saving data to database");
+
+  // get JSON-object from the http-body
+  let jsonObj = req.body;
+  console.log(jsonObj);
+
+  /* name, year, imageID, runtimeMin, genre, director, actors, plot, poster*/
+
+  // Check if there is something to be added.
+  if (!jsonObj.isNull) {
+
+    // All variables except numbers have semi-colons added for sql purposes. ex. String must be type -> "String", this is not allowed -> String.
+    let name = "\"" + jsonObj.Title + "\"";
+    let year = jsonObj.Year;
+    let imageID = "\"" + jsonObj.imdbID + "\"";
+
+    // Movies runtime must be converted from string to a float.
+    var runtimeToFloat = parseFloat(jsonObj.Runtime).toFixed(2);
+    let runtimeMin;
+
+    // We want to double check that the value is a number.
+    if(isNaN(runtimeToFloat)) {
+      runtimeMin = 0.00;
+    }
+    else {
+      runtimeMin = runtimeToFloat;
+    }
+
+    let genre = "\"" + jsonObj.Genre + "\"";
+    let director = "\"" + jsonObj.Director + "\"";
+    let actor = "\"" + jsonObj.Actors + "\"";
+    let plot = "\"" + jsonObj.Plot + "\"";
+    let poster = "\"" + jsonObj.Poster + "\"";
+
+    // IIFE, insert the data to database. Send response to client according to success/failure.
+    (async () => {
+      try {
+        let sql = "INSERT INTO movie(name, year, imageID, runtimeMin, genre, director, actors, plot, poster)" +
+            " VALUES(" + name + ", " + year + ", " + imageID + ", "
+            + runtimeMin + ", " + genre + ", " + director + ", "
+            + actor + ", " + plot + ", " + poster + ")";
+        await query(sql);
+
+      res.send("Succesfully saved data to database");
+
+      } catch (error) {
+        console.log(error);
+        res.send("Couldn't save data to database");
+
+      }
+    })()
+  }
+});
+
 
 //TODO: Search movies from database with users id
 app.get('/api/mymovies', function(req, res) {
