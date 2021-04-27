@@ -108,7 +108,6 @@ app.post('/saveDataToDb', urlencodedParser, function(req, res) {
   let jsonObj = req.body;
   console.log(jsonObj);
 
-  /* name, year, imageID, runtimeMin, genre, director, actors, plot, poster*/
 
   // Check if there is something to be added.
   if (!jsonObj.isNull) {
@@ -156,6 +155,45 @@ app.post('/saveDataToDb', urlencodedParser, function(req, res) {
   }
 });
 
+app.post('/accountValidate', function(req, res) {
+  let dataReceived = req.body;
+  let username = dataReceived.username; // String of username
+  let password = dataReceived.password; // String of password
+
+  let user = "\"" + dataReceived.username + "\""; // String of username for db
+  let pass = "\"" + dataReceived.password + "\""; // String of password for db
+
+  // Check from database if user is valid
+  (async () => {
+    try {
+      let sql = "SELECT username from users WHERE username = " + user + " AND password = " + pass;
+      let result = await query(sql);
+      let resultString = JSON.stringify(result);
+
+      // Check if we got the username, 3 because it gives 2 when there is no user by the username that was searched and username must be atleast 4 characters.
+      if(resultString.length > 3) {
+        let usernameDb = result[0].username;
+        console.log(
+            "Username: " + usernameDb + " and compared to: " + username);
+
+        if (usernameDb == username) {
+          console.log("Server send value true");
+          res.send(true);
+        } else {
+          console.log("Server send value false");
+          res.send(false);
+        }
+      }
+      else {
+        res.send(false);
+      }
+
+    } catch(error) {
+      console.log(error);
+      res.send("Problems with the database.");
+    }
+  })()
+})
 
 //TODO: Search movies from database with users id
 app.get('/api/mymovies', function(req, res) {

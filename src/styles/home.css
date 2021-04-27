@@ -1,3 +1,6 @@
+html, body {
+    font-family: 'Montserrat Alternates', sans-serif;
+}
 .btn-group {
     width: 100%;
 }
@@ -14,17 +17,6 @@
 /* Add a background color on hover */
 .btn-group button:hover {
     background-color: #3e8e41;
-}
-
-/* Sites headline div */
-.headline {
-    width: 100%;
-    margin: 40px;
-}
-
-/* Sites h1 headline */
-#headline {
-    text-align: center;
 }
 
 /* selected button/active button on home page */
@@ -70,6 +62,7 @@ figure .imageInfo {
     bottom: 0;
     top: 0;
     left: 0;
+    right: 0;
     overflow: auto;
 }
 
@@ -100,4 +93,63 @@ figure .search-movie-button:hover {
     text-shadow: 0 0 2em rgba(255,255,255,1);
     color:#FFFFFF;
     border-color:#FFFFFF;
+}
+
+.homePageMovieList {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.homePageMovieList li {
+    margin: 1%;
+}
+
+.navigation-module {
+    width: 100%;
+    display: flex;
+    background-color: white;
+    place-content: center;
+}
+
+.left-side-module {
+    width: 30%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 160px;
+    margin-right: 160px;
+}
+
+.navbar-nav {
+    margin: auto;
+}
+
+.navigation-list {
+    display: flex;
+    margin: 5px;
+
+}
+
+.nav-item {
+    margin-left: 20px;
+
+}
+.nav-item a {
+    color: #4c4c4c;
+    letter-spacing: -1px;
+    font-weight: 500;
+    font-size: 13px;
+    transition: all .3s ease;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.nav-item a:hover {
+    color: #745cf9;
+    font-weight: 600;
+}
+
+@media (min-width: 500px) {
+    .container {
+        max-width: 100%;
+    }
 }

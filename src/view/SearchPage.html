@@ -7,29 +7,41 @@
             integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
             crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="../styles/home.css">
+    <script src="../scripts/HelperFunctions.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat+Alternates:300,400,500,600" rel="stylesheet">
     <meta charset="UTF-8">
     <title>Search for a movie</title>
 </head>
 <body>
-<div class="container">
-    <header class="headline">
+<header class="navigation-module">
+    <div class="left-side-module">
         <h1 id="headline">Life Of Movies</h1>
-    </header>
-    <div class="btn-group">
-        <button class="btn-not-selected" onclick="openHome()">Home</button>
-        <button class="btn-selected" onclick="openSearch()">Search movie</button>
-        <button class="btn-not-selected" onclick="openMyMovies()">My movies</button>
     </div>
-    <div class="search-container">
-        <div>
-            <label for="movie">Search for a movie: </label><br><br>
-            <input type="text" id="movie" required>
-            <label for="year">Year: </label>
-            <input type="number" id="year" max="9999" min="0">
-            <input onclick="searchMovie()" type="submit" value="Search">
-        </div>
-        <div id="search-results">
-        </div>
+    <div class="navbar-nav">
+        <ul class="navigation-list">
+            <li class="nav-item">
+                <a href="../view/HomePage.html">HOME</a>
+            </li>
+            <li class="nav-item">
+                <a href="../view/SearchPage.html">FIND A MOVIE</a>
+            </li>
+            <li class="nav-item">
+                <a href="../view/UserMoviesPage.html">MY MOVIES</a>
+            </li>
+            <li class="nav-item">
+                <a href="../view/loginRegisterPage.html">LOGIN/REGISTER</a>
+            </li>
+        </ul>
+    </div>
+</header>
+<div class="container">
+    <div class="search-box">
+        <label for="search">Search for a movie: </label><br><br>
+        <input type="text" id="search" placeholder="Search" required>
+        <label for="year">Year: </label>
+        <input type="number" id="year" max="9999" min="0">
+        <input onclick="searchMovie()" type="submit" value="Search">
+        <div id="search-results"></div>
     </div>
 </div>
 </body>
@@ -69,6 +81,7 @@
   }
 
 
+  //
   let cacheMovieData = null;
 
   // This function shows the results of users input. Currently only shows 1 search result per successful search.
@@ -137,19 +150,8 @@
     }
   }
 
-  // Transfers JSON-data to a html string that displays the data in a nice way.
-  function jsonToMovieInfoString(parsedJson) {
-    let title = parsedJson.Title;
-    let year = parsedJson.Year;
-    let runtime = parsedJson.Runtime;
-    let genre = parsedJson.Genre;
-    let info = "<h1>" + title + "</h1><br><br>" +
-        "<p>Year: " + year + "</p><br>" +
-        "<p>Runtime: " + runtime + "</p><br>" +
-        "<p>Genre: " + genre + "</p><br>";
-    return info;
-  }
 
+  // Function that adds a movie to the database (used by author)
   function addMovieToDatabase() {
     if(cacheMovieData != null) {
       let movieData = JSON.stringify(cacheMovieData);
@@ -172,21 +174,6 @@
     else {
       console.log("There is no point to save nothing.")
     }
-  }
-</script>
-<script>
-  // Script for page switching
-
-  function openHome() {
-    window.location.href = 'HomePage.html';
-  }
-
-  function openSearch() {
-    window.location.href = 'SearchPage.html';
-  }
-
-  function openMyMovies() {
-    window.location.href = 'UserMoviesPage.html';
   }
 </script>
 </html>
