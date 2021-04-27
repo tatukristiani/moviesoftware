@@ -12,8 +12,11 @@
 <body>
 <header class="navigation-module">
  <div class="left-side-module">
-     <h1 id="headline">Life Of Movies</h1>
+     <h1 id="headline">Life Of Movies</h1><br>
  </div>
+    <div class="welcome-text">
+        <p id="welcomeUser"></p>
+    </div>
     <div class="navbar-nav">
         <ul class="navigation-list">
             <li class="nav-item">
@@ -26,7 +29,7 @@
                 <a href="../view/UserMoviesPage.html">MY MOVIES</a>
             </li>
             <li class="nav-item">
-                <a href="../view/loginRegisterPage.html">LOGIN/REGISTER</a>
+                <a href="../view/loginRegisterPage.html" id="loginNavigation">LOGIN/REGISTER</a>
             </li>
         </ul>
     </div>
@@ -83,8 +86,13 @@
 
        // Create a button for adding to "My movies"
        let button = document.createElement("button");
-       button.className = "search-movie-button";
+       button.className = "add-movie-button";
        button.innerHTML = "I've seen this!";
+       var dataForServer = encodeURIComponent(sessionStorage.getItem("username"));
+       console.log("Data for server: " + dataForServer);
+       button.addEventListener('click', e => {
+         saveToUserDatabase(parsedJson[i], dataForServer);
+       });
 
 
        figure.appendChild(image);
@@ -96,4 +104,6 @@
      list.appendChild(uoList);
   }
 </script>
+<script src="../scripts/userDetectScript.js"></script>
+<script src="../scripts/addUserMovie.js"></script>
 </html>

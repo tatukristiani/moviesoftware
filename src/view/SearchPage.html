@@ -17,6 +17,9 @@
     <div class="left-side-module">
         <h1 id="headline">Life Of Movies</h1>
     </div>
+    <div class="welcome-text">
+        <p id="welcomeUser"></p>
+    </div>
     <div class="navbar-nav">
         <ul class="navigation-list">
             <li class="nav-item">
@@ -29,7 +32,7 @@
                 <a href="../view/UserMoviesPage.html">MY MOVIES</a>
             </li>
             <li class="nav-item">
-                <a href="../view/loginRegisterPage.html">LOGIN/REGISTER</a>
+                <a href="../view/loginRegisterPage.html" id="loginNavigation">LOGIN/REGISTER</a>
             </li>
         </ul>
     </div>
@@ -46,12 +49,11 @@
 </div>
 </body>
 <script>
-
   let div = document.getElementById("search-results");
 
   // Function that send a http-request to the server and tries to find a movie with the users inputs.
   function searchMovie() {
-    let movieName = document.getElementById('movie').value;
+    let movieName = document.getElementById('search').value;
     let movieYear = document.getElementById('year').value;
     console.log('Year value: ' + movieYear + "\nName: " + movieName);
 
@@ -62,7 +64,7 @@
         console.log(json);
         if (json.length > 0) {
           showSearchResults(json);
-          document.getElementById("movie").value = "";
+          document.getElementById("search").value = "";
           document.getElementById("year").value = "";
         } else {
           div.innerHTML = 'No movies found!';
@@ -128,8 +130,11 @@
 
       // Create a button for adding to "My movies"
       let button = document.createElement("button");
-      button.className = "search-movie-button";
+      button.className = "add-movie-button";
       button.innerHTML = "I've seen this!";
+      button.addEventListener('click', e => {
+        saveToUserDatabaseSearch(parsedJson);
+      });
 
       let buttonDb = document.createElement("button");
       buttonDb.className = "addToDatabaseButton";
@@ -176,4 +181,6 @@
     }
   }
 </script>
+<script src="../scripts/userDetectScript.js"></script>
+<script src="../scripts/addUserMovie.js"></script>
 </html>

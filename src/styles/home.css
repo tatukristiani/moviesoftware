@@ -66,7 +66,7 @@ figure .imageInfo {
     overflow: auto;
 }
 
-figure .search-movie-button {
+figure .add-movie-button {
     position: absolute;
     bottom: 0;
     left: 1%;
@@ -89,7 +89,7 @@ figure .search-movie-button {
     background-color: #42cc8c;
 }
 
-figure .search-movie-button:hover {
+figure .add-movie-button:hover {
     text-shadow: 0 0 2em rgba(255,255,255,1);
     color:#FFFFFF;
     border-color:#FFFFFF;
@@ -146,6 +146,12 @@ figure .search-movie-button:hover {
 .nav-item a:hover {
     color: #745cf9;
     font-weight: 600;
+}
+
+.welcome-text {
+    width: 200px;
+    margin-top: 20px;
+    margin-left: 0px;
 }
 
 @media (min-width: 500px) {

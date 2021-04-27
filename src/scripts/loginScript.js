@@ -89,6 +89,7 @@ function accountValidate(username, password, loginForm) {
       console.log(jsonObj);
 
       if(jsonObj == true) {
+        sessionStorage.setItem("username", username);
         openHome();
       }
       else {
