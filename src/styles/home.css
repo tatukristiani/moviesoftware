@@ -28,9 +28,10 @@ ul {
     list-style: none;
 }
 
-#movieList img {
+#movieList img, #myMovieList img {
     width: 240px;
     height: 320px;
+    transition: .5s ease;
 }
 
 #search-results img {
@@ -95,12 +96,12 @@ figure .add-movie-button:hover {
     border-color:#FFFFFF;
 }
 
-.homePageMovieList {
+.homePageMovieList, #myMovieList {
     display: flex;
     flex-wrap: wrap;
 }
 
-.homePageMovieList li {
+.homePageMovieList li, #myMovieList li {
     margin: 1%;
 }
 
@@ -152,6 +153,26 @@ figure .add-movie-button:hover {
     width: 200px;
     margin-top: 20px;
     margin-left: 0px;
+}
+
+.container {
+    padding: 0;
+}
+
+.movie-container, .listOfMovies {
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 50px;
+}
+
+#myMovieList, .homePageMovieList {
+    padding-left: 0;
+}
+
+.message-for-user {
+    text-align: center;
+    margin-bottom: 50px;
+    text-shadow: 0 0 black;
 }
 
 @media (min-width: 500px) {

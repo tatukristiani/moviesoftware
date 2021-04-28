@@ -51,7 +51,7 @@
         populateMovieList(json);
 
       }
-      else {
+      else if(xhr.status == 404 || xhr.status == 500) {
         list.innerHTML = "Something went wrong! No movies found!";
       }
     };
@@ -88,9 +88,8 @@
        let button = document.createElement("button");
        button.className = "add-movie-button";
        button.innerHTML = "I've seen this!";
-       var dataForServer = encodeURIComponent(sessionStorage.getItem("username"));
-       console.log("Data for server: " + dataForServer);
        button.addEventListener('click', e => {
+         var dataForServer = sessionStorage.getItem("username");
          saveToUserDatabase(parsedJson[i], dataForServer);
        });
 

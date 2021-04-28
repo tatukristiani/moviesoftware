@@ -30,6 +30,10 @@ document.addEventListener('DOMContentLoaded',() => {
 
   createAccountForm.addEventListener('submit', e => {
     e.preventDefault();
+    let username = createAccountForm.querySelector("#signupUsername").value;
+    let password = createAccountForm.querySelector("#signupPassword").value;
+    let confirmPassword = createAccountForm.querySelector("#signupPasswordConfirm").value;
+
 
     // AJAX logic here
 
@@ -42,6 +46,15 @@ document.addEventListener('DOMContentLoaded',() => {
     inputElement.addEventListener("blur", e => {
       if (e.target.id === "signupUsername" && e.target.value.length > 0 && e.target.value.length < 4) {
         setInputError(inputElement, "Username must be at least 4 characters in length");
+      }
+      if(e.target.id === "signupPassword" && e.target.value.length > 0 && e.target.value.length < 4) {
+        setInputError(inputElement, "Password must be at least 4 charachters in length");
+      }
+      if(e.target.id === "signupPasswordConfirm") {
+        let pass = createAccountForm.querySelector("#signupPassword").value;
+        if(pass !== e.target.value) {
+          setInputError(inputElement, "Your passwords don't match!");
+        }
       }
 
     });

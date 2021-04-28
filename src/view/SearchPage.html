@@ -83,7 +83,6 @@
   }
 
 
-  //
   let cacheMovieData = null;
 
   // This function shows the results of users input. Currently only shows 1 search result per successful search.
@@ -133,7 +132,8 @@
       button.className = "add-movie-button";
       button.innerHTML = "I've seen this!";
       button.addEventListener('click', e => {
-        saveToUserDatabaseSearch(parsedJson);
+        var dataForServer = sessionStorage.getItem("username");
+        saveToUserDatabaseSearch(parsedJson, dataForServer);
       });
 
       let buttonDb = document.createElement("button");

@@ -36,6 +36,7 @@
 </header>
 <div class="container">
     <div class="movie-container">
+        <p class="message-for-user"></p>
         <ul id="myMovieList">
 
         </ul>
@@ -43,42 +44,66 @@
 </div>
 </body>
 <script>
-  var json;
-  (function () {
-    let list = document.getElementById("myMovieList");
-    let xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState == 4 && xhr.status == 200) {
-        json = xhr.responseText;
-        console.log(json);
-        if(json.length > 0) {
-          populateMyMovieList(json);
-        } else {
-          list.innerHTML = "You don't have any movies added to your list.";
-        }
-      }
-      else if(xhr.status == 404) {
-        list.innerHTML = "Something went wrong!";
-      }
-    };
+  let user = sessionStorage.getItem("username");
+  let message = document.querySelector(".message-for-user");
+  let list = document.getElementById("myMovieList");
 
-    xhr.open("GET", "http://localhost:8080/mymovies", true);
-    xhr.send();
+  var json;
+
+  (function() {
+    if(user !== null) {
+      let xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+          json = xhr.responseText;
+          if(json.length > 0 && json != false) {
+            populateMyMovieList(json);
+          }
+          else {
+            message.innerHTML = "You don't have any movies added yet.";
+          }
+
+        } else if (xhr.status == 404) {
+          message.innerHTML = "Something went wrong! Sorry...";
+        }
+      };
+
+      let uri = "http://localhost:8080/mymovies?user=" + user;
+      xhr.open("GET", uri, true);
+      xhr.send();
+     }
+    else {
+      message.innerHTML = "You must be logged in to be able to view your movies.";
+    }
 
   })();
 
   function populateMyMovieList(json) {
-    let list = document.getElementById("myMovieList");
     let parsedJson = JSON.parse(json);
+    var totalMinutesWatched = 0;
 
     for(let i = 0; i < parsedJson.length; i++) {
       let li = document.createElement("li");
+      let figure = document.createElement("figure");
       let img = document.createElement("img");
       img.src = parsedJson[i].poster;
-      li.appendChild(img);
+      img.alt = parsedJson[i].name;
+      img.className = "image";
+
+      // Create movie information
+      let movieInfo = document.createElement("div");
+      movieInfo.innerHTML = jsonToMovieInfo(parsedJson[i]);
+      movieInfo.className = "imageInfo";
+      figure.appendChild(img);
+      figure.appendChild(movieInfo);
+      li.appendChild(figure);
       list.appendChild(li);
+      totalMinutesWatched += parsedJson[i].runtimeMin;
     }
+    console.log(totalMinutesWatched);
+    message.innerHTML = timeConvertToString(totalMinutesWatched);
   }
 </script>
 <script src="../scripts/userDetectScript.js"></script>
+<script src="../scripts/HelperFunctions.js"></script>
 </html>

@@ -27,8 +27,15 @@ function jsonToMovieInfo(parsedJson) {
 };
 
 
-// Dont need these!
-// For page switching
+function timeConvertToString(minutes) {
+  var timeInHours = minutes / 60;
+  var decimalsFromHour = timeInHours - Math.floor(timeInHours);
+  var hour = timeInHours - decimalsFromHour;
+  var minutes = minutes - hour * 60;
+  let stringToReturn = "Time spent on movies: " + hour + " hours and " + minutes + " minutes.";
+
+  return stringToReturn;
+}
 
 function openHome() {
   window.location.href = 'HomePage.html';
