@@ -4,6 +4,7 @@ const express = require('express');
 const mysql = require('mysql');
 const cors = require('cors');
 const request = require('request');
+const bcrypt = require('bcryptjs'); // Password hash crypt.
 
 // Create connection to database
 var sqlCon = mysql.createConnection({
@@ -61,16 +62,17 @@ app.get('/search', function(req, res) {
     request('http://www.omdbapi.com/?t=' + movieName + '&y=' + movieYear +
         '&apikey=1376e1b1', function(error, response, body) {
       console.log(body);
-      console.log('Year search complete!');
+      console.log('Search with year completed.');
       res.send(body);
     });
   }
+
   // If user didn't add a year to the search bar, then we don't use it.
   else {
     request('http://www.omdbapi.com/?t=' + movieName + '&apikey=1376e1b1',
         function(error, response, body) {
-          console.log(body);
-          console.log('NO year search complete!');
+          //console.log(body);
+          console.log('Search without year completed!');
           res.send(body);
         });
   }
@@ -129,36 +131,37 @@ app.post('/saveDataToDb', function(req, res) {
   }
 });
 
-// Checks if the user is registered.
+// Checks if the user is registered. Used in when user tries to login.
 app.post('/accountValidate', function(req, res) {
+  console.log("Validating user credentials.");
   let dataReceived = req.body;
   let username = dataReceived.username; // String of username
   let password = dataReceived.password; // String of password
 
-  let user = '"' + dataReceived.username + '"'; // String of username for db
-  let pass = '"' + dataReceived.password + '"'; // String of password for db
+  let user = '"' + username + '"'; // String of username for db
 
   // Check from database if user is valid
   (async () => {
     try {
-      let sql = 'SELECT username from users WHERE username = ' + user +
-          ' AND password = ' + pass;
+      let sql = 'SELECT username, password from users WHERE username = ' + user;
       let result = await query(sql);
       let resultString = JSON.stringify(result);
 
       // Check if we got the username, 3 because it gives 2 when there is no user by the username that was searched and username must be atleast 4 characters.
       if (resultString.length > 3) {
         let usernameDb = result[0].username;
-        console.log(
-            'Username: ' + usernameDb + ' and compared to: ' + username);
+        var hashPass = result[0].password;
 
-        if (usernameDb == username) {
-          console.log('Server send value true');
-          res.send(true);
-        } else {
-          console.log('Server send value false');
-          res.send(false);
-        }
+        bcrypt.compare(password, hashPass, function(error, response) {
+          //console.log(response);
+          if(response == true && usernameDb == username) {
+            res.send(true);
+          }
+          else if(response == false) {
+            console.log(error);
+            res.send(false);
+          }
+        });
       } else {
         res.send(false);
       }
@@ -170,8 +173,59 @@ app.post('/accountValidate', function(req, res) {
   })();
 });
 
-// Saves movie the user clicked on to their database.
+// Creates an account for the site.
+app.post('/createAccount', function(req, res) {
+  console.log("Creating an account");
+  let dataReceived = req.body;
+  let username = dataReceived.username; // String of username
+  let password = dataReceived.password; // String of password
+  let responseString;
+
+  if(username.length > 3 && password.length > 3) {
+
+    var hashPass = bcrypt.hashSync(password, 12);
+    let user = '"' + username + '"'; // String of username for db
+    let pass = '"' + hashPass + '"'; // String of password for db
+
+    // Check from database if user is valid
+    (async () => {
+      try {
+        let sql = "SELECT username FROM users WHERE username = " + user;
+        let accountExists = await query(sql);
+
+
+        if(JSON.stringify(accountExists).length < 3) {
+          sql = "INSERT INTO users(username,password,user_level) VALUES(" +
+              user + ", " + pass + ", 'user')";
+          await query(sql);
+          res.send(true);
+        }
+        else {
+          responseString = {
+            response: "This username is already taken. Pick another one."
+          }
+          res.send(responseString);
+        }
+
+      } catch (error) {
+        console.log(error);
+        res.send(false);
+      }
+    })();
+  }
+  else {
+    responseString = {
+      response: "Username and password must be at least 4 characters in length!"
+    };
+    res.send(responseString);
+  }
+});
+
+
+// Saves the movie user clicked on to their database.
 app.post('/saveMovieToDb', urlencodedParser, function(req, res) {
+  console.log("Saving movie to users database.");
+
   var q = url.parse(req.url, true).query;
 
   let movieName = q.name;
@@ -192,9 +246,10 @@ app.post('/saveMovieToDb', urlencodedParser, function(req, res) {
   let plot;
   let poster;
 
+
   // We get the movies information from the API
   request(uri, function(error, response, body) {
-    console.log('Server response: ' + body);
+    //console.log('Server response: ' + body);
     jsonObj = JSON.parse(body);
 
     // Variables for saving the movie to database.
@@ -209,22 +264,17 @@ app.post('/saveMovieToDb', urlencodedParser, function(req, res) {
     poster = '"' + jsonObj.Poster + '"';
 
     let searchUser = '"' + username + '"';
-    console.log('Name and year: ' + name + ' & ' + year + ' & ' + searchUser);
-
     let userID; // For the users ID.
     let movieID; // For the movies ID.
 
     // Check if the movie is in database. If it's not add it.
     (async () => {
       try {
-
-        // Check if the movie allready is in database.
+        // Check if the movie is already in the database.
         let sql = 'SELECT * FROM movie WHERE name = ' + name + ' AND year = ' +
             year;
         let result = await query(sql);
         let resultString = JSON.stringify(result);
-        console.log('Result string: ' + resultString + ' and length: ' +
-            resultString.length);
 
         // If the movie is not in database, we save it there.
         if (resultString.length < 3) {
@@ -241,7 +291,6 @@ app.post('/saveMovieToDb', urlencodedParser, function(req, res) {
         sql = 'SELECT id FROM users WHERE username = ' + searchUser;
         result = await query(sql);
         userID = result[0].id;
-        console.log(userID);
 
         // Search for movies ID
         sql = 'SELECT id FROM movie WHERE name = ' + name + ' AND year = ' +
@@ -250,12 +299,23 @@ app.post('/saveMovieToDb', urlencodedParser, function(req, res) {
         movieID = result[0].id;
         console.log(movieID);
 
-        // Then add this movie to the user_movie table.
-        sql = 'INSERT INTO user_movie(userID,movieID) VALUES(' + userID + ', ' +
-            movieID + ')';
-        await query(sql);
+        // First we check if the movie is already in the users database.
+        sql = "SELECT * from user_movie WHERE userID = " + userID + " AND movieID = " + movieID;
+        let confirmMovieDoesntExists = await query(sql);
 
-        res.send(movieName + ' successfully added to your movies!');
+        // If we wound out that the user doesn't have this movie we save it.
+        if(JSON.stringify(confirmMovieDoesntExists).length < 3) {
+
+          // Then add this movie to the user_movie table.
+          sql = 'INSERT INTO user_movie(userID,movieID) VALUES(' + userID +
+              ', ' +
+              movieID + ')';
+          await query(sql);
+          res.send(movieName + ' successfully added to your movies!');
+        }
+        else {
+          res.send("You already have " + movieName + " added to your movies.");
+        }
       } catch (error) {
         console.log(error);
         res.send('Couldn\'t add ' + movieName + ' to your movies.');
@@ -264,7 +324,7 @@ app.post('/saveMovieToDb', urlencodedParser, function(req, res) {
   });
 });
 
-
+// Finds all movies in users database.
 app.get('/mymovies', urlencodedParser, function(req, res) {
   console.log('Fetching users movies');
   var q = url.parse(req.url, true).query;

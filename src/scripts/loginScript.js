@@ -34,12 +34,7 @@ document.addEventListener('DOMContentLoaded',() => {
     let password = createAccountForm.querySelector("#signupPassword").value;
     let confirmPassword = createAccountForm.querySelector("#signupPasswordConfirm").value;
 
-
-    // AJAX logic here
-
-    // Error message when passwords doesn't matchup
-
-    // Error message when username is too short or too long
+    createAccount(username, password, confirmPassword, createAccountForm);
   });
 
   document.querySelectorAll(".form-input").forEach(inputElement => {
@@ -56,11 +51,11 @@ document.addEventListener('DOMContentLoaded',() => {
           setInputError(inputElement, "Your passwords don't match!");
         }
       }
-
     });
 
     inputElement.addEventListener("input", e => {
       clearInputError(inputElement);
+      clearFormMessage(createAccountForm);
     });
   });
 });
@@ -74,6 +69,16 @@ function setFormMessage(formElement, type, message) {
   msgElement.classList.add("form-message-$(type)");
 };
 
+function clearFormMessage(formElement) {
+  formElement.querySelector(".form-message").textContent = '';
+}
+
+function clearInputs(formElement) {
+  formElement.querySelectorAll(".form-input").forEach(element => {
+    element.value = '';
+  })
+}
+
 // Set the error message of input
 function setInputError(inputElement, message) {
   inputElement.classList.add("form-input-error");
@@ -85,6 +90,7 @@ function clearInputError(inputElement) {
   inputElement.classList.remove("form-input-error");
   inputElement.parentElement.querySelector(".form-input-error-message").textContent = "";
 };
+
 
 function accountValidate(username, password, loginForm) {
   let account = {
@@ -111,10 +117,51 @@ function accountValidate(username, password, loginForm) {
       }
     }
   };
-
   let uri = "http://localhost:8080/accountValidate";
 
   xhr.open('POST', uri, true);
   xhr.setRequestHeader("Content-Type", "application/json");
   xhr.send(dataToSend);
-};
+}
+
+function createAccount(username, password, confirmPassword, createForm) {
+  if (password !== confirmPassword) {
+    setFormMessage(createForm, "error",
+        "Your passwords didn't match. Try again.");
+  } else {
+    let user = {
+      username: username,
+      password: password
+    };
+
+    let dataToSend = JSON.stringify(user);
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState == 4 && xhr.status == 200) {
+        let response = xhr.responseText;
+        console.log("Response from server: " + response);
+        let jsonObj = JSON.parse(response);
+        //console.log(jsonObj);
+
+        if (jsonObj == true) {
+          sessionStorage.setItem("username", username);
+          openHome();
+        } else if(jsonObj == false) {
+          // Error message, if username and password doesn't match then send an error message.
+          setFormMessage(createForm, "error",
+              "There was a problem with the database, couldn't create an account.");
+        } else {
+          setFormMessage(createForm, "error", jsonObj.response);
+          clearInputs(createForm);
+        }
+      }
+    };
+
+    let uri = "http://localhost:8080/createAccount";
+
+    xhr.open('POST', uri, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(dataToSend);
+  }
+}
+

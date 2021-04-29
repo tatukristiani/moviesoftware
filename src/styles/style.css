@@ -1,29 +1,6 @@
 html, body {
     font-family: 'Montserrat Alternates', sans-serif;
 }
-.btn-group {
-    width: 100%;
-}
-.btn-group button {
-    width: 33.3%;
-    background-color: #4CAF50; /* Green background */
-    border: 1px solid green; /* Green border */
-    color: white; /* White text */
-    padding: 10px 24px; /* Some padding */
-    cursor: pointer; /* Pointer/hand icon */
-    float: left; /* Float the buttons side by side */
-}
-
-/* Add a background color on hover */
-.btn-group button:hover {
-    background-color: #3e8e41;
-}
-
-/* selected button/active button on home page */
-.btn-group .btn-selected {
-    background-color: #3e8e41;
-}
-
 ul {
     list-style: none;
 }
@@ -65,6 +42,7 @@ figure .imageInfo {
     left: 0;
     right: 0;
     overflow: auto;
+    width: 100%;
 }
 
 figure .add-movie-button {
@@ -127,6 +105,7 @@ figure .add-movie-button:hover {
 .navigation-list {
     display: flex;
     margin: 5px;
+    width: max-content;
 
 }
 
@@ -150,7 +129,7 @@ figure .add-movie-button:hover {
 }
 
 .welcome-text {
-    width: 200px;
+    width: 250px;
     margin-top: 20px;
     margin-left: 0px;
 }
@@ -175,6 +154,77 @@ figure .add-movie-button:hover {
     text-shadow: 0 0 black;
 }
 
+#search:hover, #year:hover {
+    padding: 12px 0;
+    outline: 0;
+    border: 1px solid transparent;
+    border-bottom: 1px solid #575756;
+    border-radius: 0;
+    background-position: 100% center;
+}
+
+#search:focus, #year:focus {
+     padding: 12px 0;
+     outline: 0;
+     border: 1px solid transparent;
+     border-bottom: 1px solid #575756;
+     border-radius: 0;
+     background-position: 100% center;
+}
+
+
+#search, #year {
+    margin-right: 20px;
+     width: 350px;
+     padding: 12px 24px;
+
+     background-color: transparent;
+     transition: transform 1000ms ease-in-out;
+     font-size: 19px;
+     line-height: 18px;
+
+     color: #575756;
+     background-color: transparent;
+     background-repeat: no-repeat;
+     background-size: 18px 18px;
+     background-position: 95% center;
+     border-radius: 50px;
+     border: 1px solid #575756;
+     transition: all 250ms ease-in-out;
+     backface-visibility: hidden;
+     transform-style: preserve-3d;
+ }
+
+.search-box {
+    text-align: center;
+}
+
+#year {
+    width: 150px;
+}
+
+#headline {
+    width: max-content;
+    padding-top: 20px;
+}
+
+#search-results p {
+    margin-top: 20px;
+    text-align: center;
+}
+@media screen and (max-width: 800px) {
+    .navbar-nav {
+        margin-right: 0;
+    }
+    .navigation-list {
+        display: block;
+        border-left-style: ridge;
+        border-bottom-style: ridge;
+        border-top-style: ridge;
+        padding-left: 1px;
+    }
+
+}
 @media (min-width: 500px) {
     .container {
         max-width: 100%;
