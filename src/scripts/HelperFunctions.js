@@ -38,14 +38,7 @@ function timeConvertToString(minutes) {
 }
 
 function openHome() {
-  window.location.href = 'HomePage.html';
+  window.location.href = 'index.html';
 }
 
-function openSearch() {
-  window.location.href = 'SearchPage.html';
-}
-
-function openMyMovies() {
-  window.location.href = 'UserMoviesPage.html';
-}
 
