@@ -1,4 +1,10 @@
+
 var json;
+/**
+ * This script is for the "home" page (index.html).
+ * The IIFE (Immediately Invoked Function Expression) sends a GET-method to the server and then the server sends all the current movies in the database and then populateMovieList()-function is called,
+ * assuming the GET-request was successful.
+ */
 (function () {
   let list = document.getElementById("movieList");
   let xhr = new XMLHttpRequest();
@@ -20,7 +26,10 @@ var json;
 
 })();
 
-// Function that populates movieList on homepage with movies in the database.
+/**
+ * Takes in a JSON-data, that needs parsing before use and then creates html-elements on the index.html page with the movies that were in the JSON-data.
+ * @param json JSON-data that has been made into a string. (Parse before use inside this function)
+ */
 function populateMovieList(json) {
   let list = document.getElementById("movieList");
   var parsedJson = JSON.parse(json);

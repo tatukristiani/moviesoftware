@@ -1,12 +1,12 @@
 const url = require('url');
 const util = require('util');
 const express = require('express');
-const mysql = require('mysql');
-const cors = require('cors');
-const request = require('request');
+const mysql = require('mysql'); // For database.
+const cors = require('cors'); // For all access for all domains.
+const request = require('request'); // For external API calls.
 const bcrypt = require('bcryptjs'); // Password hash crypt.
 
-// Create connection to database
+// Create connection to database. Current database is a local one.
 var sqlCon = mysql.createConnection({
   host: 'localhost',
   user: 'olso',
@@ -31,7 +31,9 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 
-// Home page, displays hard coded movies from database. Data originally from external API:s database.
+/**
+ * Gets all movies from the database table "movie"
+ */
 app.get('/home', function(req, res) {
   console.log('Home page opened');
   let sql = 'SELECT * from movie';
@@ -48,7 +50,10 @@ app.get('/home', function(req, res) {
 
 });
 
-// Search a movie fron omdbAPI with a movie name/year. Sends only one movie per search.
+/**
+ * Searches for a movie from the omdbAPI with the users given title and year(optional).
+ * This function finds only 1 movie MAX.
+ */
 app.get('/search', function(req, res) {
   console.log('Searching movie from external API');
   var q = url.parse(req.url, true).query;
@@ -56,7 +61,7 @@ app.get('/search', function(req, res) {
   var movieYear = parseInt(q.year);
   console.log('Movie name: ' + movieName + ' MovieYear: ' + movieYear);
 
-  // Check if we have year input from user, if we got one then we perform a search with it.
+  // Check if we have year input from the user, if we got one then we perform a search with it.
   if (movieYear != null && movieYear != NaN && movieYear > 0 && movieYear <
       9999) {
     request('http://www.omdbapi.com/?t=' + movieName + '&y=' + movieYear +
@@ -79,6 +84,9 @@ app.get('/search', function(req, res) {
 });
 
 // Save data to database (Authors tool for adding movies)
+/**
+ * Authors tool for adding movies to the database.
+ */
 app.post('/saveDataToDb', function(req, res) {
   console.log('Saving data to database');
 
@@ -131,7 +139,9 @@ app.post('/saveDataToDb', function(req, res) {
   }
 });
 
-// Checks if the user is registered. Used in when user tries to login.
+/**
+ * Checks if the users given username and password are indeed correct.
+ */
 app.post('/accountValidate', function(req, res) {
   console.log("Validating user credentials.");
   let dataReceived = req.body;
@@ -147,11 +157,12 @@ app.post('/accountValidate', function(req, res) {
       let result = await query(sql);
       let resultString = JSON.stringify(result);
 
-      // Check if we got the username, 3 because it gives 2 when there is no user by the username that was searched and username must be atleast 4 characters.
+      // Check if we got the username, 3 because it gives 2 when there is no user by the username that was searched and username must be at least 4 characters.
       if (resultString.length > 3) {
         let usernameDb = result[0].username;
         var hashPass = result[0].password;
 
+        // Using the bcrypts compare method to check if the password in the database matches with the one given by the user.
         bcrypt.compare(password, hashPass, function(error, response) {
           //console.log(response);
           if(response == true && usernameDb == username) {
@@ -173,7 +184,11 @@ app.post('/accountValidate', function(req, res) {
   })();
 });
 
-// Creates an account for the site.
+
+/**
+ * Creates an account for the user.
+ * Hashes the password and check the correct validation of the username/password.
+ */
 app.post('/createAccount', function(req, res) {
   console.log("Creating an account");
   let dataReceived = req.body;
@@ -221,8 +236,9 @@ app.post('/createAccount', function(req, res) {
   }
 });
 
-
-// Saves the movie user clicked on to their database.
+/**
+ * Saves the movies data to the users database. Finds the movies data from the external API.
+ */
 app.post('/saveMovieToDb', urlencodedParser, function(req, res) {
   console.log("Saving movie to users database.");
 
@@ -324,7 +340,9 @@ app.post('/saveMovieToDb', urlencodedParser, function(req, res) {
   });
 });
 
-// Finds all movies in users database.
+/**
+ * Finds all movies that the user has on the database.
+ */
 app.get('/mymovies', urlencodedParser, function(req, res) {
   console.log('Fetching users movies');
   var q = url.parse(req.url, true).query;

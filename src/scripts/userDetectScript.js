@@ -1,3 +1,7 @@
+/**
+ * This script detects if the current user is logged in or not.
+ * When logged in displays a welcome text for the user and adds a Logout-button/link to the page.
+ */
 (function () {
   let welcome = document.getElementById("welcomeUser"); // Welcome text.
   let loginNavigation = document.getElementById("loginNavigation"); // Login / Register nav item

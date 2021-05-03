@@ -1,6 +1,8 @@
 let div = document.getElementById("search-results");
 
-// Function that sends a http-request to the server and tries to find a movie with the users inputs.
+/**
+ * Function that sends a GET-request to the server and tries to find a movie with the users inputs.
+ */
 function searchMovie() {
   let movieName = document.getElementById('search').value;
   let movieYear = document.getElementById('year').value;
@@ -30,11 +32,15 @@ function searchMovie() {
   xhr.send();
 }
 
-
+// Used for storing parsed JSON. (Had some problems with accessing the data)
 let cacheMovieData = null;
 
-// This function shows the results of users input. Currently only shows 1 search result per successful search.
+/**
+ * Shows the movie information on the html-page that are on the parameter json.
+ * @param json String of a JSON-object.
+ */
 function showSearchResults(json) {
+  // 1st step is to clear all current search result that are on the page.
   while(div.hasChildNodes()) {
     div.removeChild(div.firstChild);
   }
@@ -106,6 +112,9 @@ function showSearchResults(json) {
 
 
 // Function that adds a movie to the database (used by author)
+/**
+ * Authors tool to add movies easily to the database.
+ */
 function addMovieToDatabase() {
   if(cacheMovieData != null) {
     let movieData = JSON.stringify(cacheMovieData);

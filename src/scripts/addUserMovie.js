@@ -1,6 +1,11 @@
 
 // This function works when user is on homepage.
 // Function saves the movie that the user picked from home page to their database.
+/**
+ * Saves a movie to the database with the current users information. This version of the function is used when dealing with data from the database.
+ * @param jsonFormat JSON-formatted data of the movie. Access to the data properties differs from the saveToUserDatabaseSearch()-function.
+ * @param user The user that is trying to save the movie.
+ */
 function saveToUserDatabase(jsonFormat, user) {
 
   if(user !== null) {
@@ -33,6 +38,11 @@ function saveToUserDatabase(jsonFormat, user) {
 
 // This function works when user is on search page.
 // Function saves the searched movie to their database.
+/**
+ * Saves a movie to the database with the current users information. This version of the function is used when dealing with data from the external API (omdbAPI)
+ * @param jsonFormat JSON-formatted data of the movie. Access to the data properties differs from the saveToUserDatabase()-function.
+ * @param user The user that is trying to save the movie.
+ */
 function saveToUserDatabaseSearch(jsonFormat, user) {
 
   if(user !== null) {

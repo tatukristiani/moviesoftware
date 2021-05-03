@@ -4,7 +4,10 @@ let list = document.getElementById("myMovieList");
 
 var json;
 
-// Gets the specific users data from the database, if the user is logged in.
+/**
+ * When UserMoviesPage.html page is loaded, this function finds that users movies from the database and shows them to the user.
+ * If the user is not logged in, there will be a message saying that the user is not logged in.
+ */
 (function() {
   if(user !== null) {
     let xhr = new XMLHttpRequest();
@@ -33,6 +36,10 @@ var json;
 
 })();
 
+/**
+ * Adds the movies to the html-page found from the database and shows the current spent time on movies.
+ * @param json String of a JSON, to access the JSON-data, need parsing.
+ */
 function populateMyMovieList(json) {
   let parsedJson = JSON.parse(json);
   var totalMinutesWatched = 0;
