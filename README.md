@@ -1,7 +1,7 @@
 # Moviesoftware Project 4.5.2021
 School project that had a time limit of 4 weeks. 
 
-#JSON properties External API and Database
+# JSON properties External API and Database
 
 There are two different types of properties for handling the JSON-data for the movies.
 1. External API (omdbAPI) JSON properties:
@@ -31,7 +31,7 @@ These are the properties that were used in this project when handling data from 
 
 These are the properties that were used when dealing with database JSON-data.
 
-#REST API CALLS
+# REST API CALLS
 The script called "server.js" works as a REST API.
 
 1. app.get('/home'), "/home"-call
