@@ -48,10 +48,24 @@ function timeConvertToString(minutes) {
 }
 
 /**
+ * Tests the string given that it is a valid string. (used for username and password)
+ * @param credentialToValidate String to be validated.
+ * @returns {boolean} Returns true if a string is valid, otherwise false.
+ */
+function validateCredential(credentialToValidate) {
+  // Regex used won't accept strings that start/end with a . or _ or have two of them in a row
+  // Length of string must be at least 4 characters and MAX 20 characters.
+  let regex = "^(?=.{4,20}$)(?:[a-zA-Z\\d]+(?:(?:\\.|-|_)[a-zA-Z\\d])*)+$";
+  let pattern = new RegExp(regex);
+  return pattern.test(credentialToValidate);
+}
+
+/**
  * Function opens the "Home" page (index.html)
  */
 function openHome() {
   window.location.href = 'index.html';
 }
+
 
 

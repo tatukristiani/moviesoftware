@@ -196,7 +196,7 @@ app.post('/createAccount', function(req, res) {
   let password = dataReceived.password; // String of password
   let responseString;
 
-  if(username.length > 3 && password.length > 3) {
+  if(validateCredential(username) && validateCredential(password)) {
 
     var hashPass = bcrypt.hashSync(password, 12);
     let user = '"' + username + '"'; // String of username for db
@@ -230,11 +230,19 @@ app.post('/createAccount', function(req, res) {
   }
   else {
     responseString = {
-      response: "Username and password must be at least 4 characters in length!"
+      response: "Username/Password must be 4-20 characters in length, they can't start or end with a . or _ or have two of them in a row!"
     };
     res.send(responseString);
   }
 });
+// Function from HelperFunctions, used for double checking the username and password before saving them to database.
+function validateCredential(credentialToValidate) {
+  // Regex used won't accept strings that start/end with a . or _ or have two of them in a row
+  // Length of string must be at least 4 characters and MAX 20 characters.
+  let regex = "^(?=.{4,20}$)(?:[a-zA-Z\\d]+(?:(?:\\.|-|_)[a-zA-Z\\d])*)+$";
+  let pattern = new RegExp(regex);
+  return pattern.test(credentialToValidate);
+}
 
 /**
  * Saves the movies data to the users database. Finds the movies data from the external API.

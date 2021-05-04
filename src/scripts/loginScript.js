@@ -42,17 +42,34 @@ document.addEventListener('DOMContentLoaded',() => {
     let password = createAccountForm.querySelector("#signupPassword").value;
     let confirmPassword = createAccountForm.querySelector("#signupPasswordConfirm").value;
 
-    createAccount(username, password, confirmPassword, createAccountForm);
+    let isUsernameValid = validateCredential(username);
+    let isPasswordValid = validateCredential(password);
+
+    if(isUsernameValid && isPasswordValid) {
+      createAccount(username, password, confirmPassword, createAccountForm);
+    }
+    else if(isUsernameValid && !isPasswordValid) {
+      setInputError(document.getElementById("signupPassword"), "Password must be 4-20 characters in length, password can't start or end with a . or _ or have two of them in a row!");
+    }
+    else if(!isUsernameValid && isPasswordValid) {
+      setInputError(document.getElementById("signupUsername"), "Username must be 4-20 characters in length, username can't start or end with a . or _ or have two of them in a row!");
+    }
+    else if(!isUsernameValid && !isPasswordValid) {
+      setInputError(document.getElementById("signupPassword"), "Password must be 4-20 characters in length, password can't start or end with a . or _ or have two of them in a row!");
+      setInputError(document.getElementById("signupUsername"), "Username must be 4-20 characters in length, username can't start or end with a . or _ or have two of them in a row!");
+    }
+
+
   });
 
-  // Input elements like for the username and password for create account form has eventlisteners that indicate errors for the user.
+  // Input elements like for the username and password for create account form has event listeners that indicate errors for the user.
   document.querySelectorAll(".form-input").forEach(inputElement => {
     inputElement.addEventListener("blur", e => {
-      if (e.target.id === "signupUsername" && e.target.value.length > 0 && e.target.value.length < 4) {
-        setInputError(inputElement, "Username must be at least 4 characters in length");
+      if (e.target.id === "signupUsername" && e.target.value.length < 4 || e.target.value.length > 20) {
+        setInputError(inputElement, "Username must be 4-20 characters in length");
       }
-      if(e.target.id === "signupPassword" && e.target.value.length > 0 && e.target.value.length < 4) {
-        setInputError(inputElement, "Password must be at least 4 charachters in length");
+      if(e.target.id === "signupPassword" && e.target.value.length < 4 || e.target.value.length > 20) {
+        setInputError(inputElement, "Password must be 4-20 characters in length");
       }
       if(e.target.id === "signupPasswordConfirm") {
         let pass = createAccountForm.querySelector("#signupPassword").value;
