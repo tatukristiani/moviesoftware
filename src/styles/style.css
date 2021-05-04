@@ -211,7 +211,10 @@ figure .add-movie-button:hover {
     padding-top: 20px;
 }
 
-#search-results p {
+#search-results {
+    margin-top: 20px;
+}
+#nothing-found {
     margin-top: 20px;
     text-align: center;
 }

@@ -50,6 +50,7 @@ function showSearchResults(json) {
   // If response field has false then it means there are no search results.
   if(parsedJson.Response.includes("False"))  {
     let para = document.createElement("p");
+    para.id = "nothing-found";
     para.innerHTML = "No movies were found! Try to find something else instead.";
     div.appendChild(para);
   }
