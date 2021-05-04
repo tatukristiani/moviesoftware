@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: addUserMovie.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: addUserMovie.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+// This function works when user is on homepage.
+// Function saves the movie that the user picked from home page to their database.
+/**
+ * Saves a movie to the database with the current users information. This version of the function is used when dealing with data from the database.
+ * @param jsonFormat JSON-formatted data of the movie. Access to the data properties differs from the saveToUserDatabaseSearch()-function.
+ * @param user The user that is trying to save the movie.
+ */
+function saveToUserDatabase(jsonFormat, user) {
+
+  if(user !== null) {
+    let name = jsonFormat.name;
+    let year = jsonFormat.year;
+    let json;
+
+    // Send name and year to server, then server will find the movies info and add them to database.
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState == 4 &amp;&amp; xhr.status == 200) {
+        json = xhr.responseText;
+        let response = JSON.stringify(json);
+        alert(response);
+      } else if (xhr.status == 404 || xhr.status == 500) {
+        alert("Oops, couldn't save the movie... Sorry!");
+      }
+    };
+
+    let uri = "http://localhost:8080/saveMovieToDb?name=" + name + "&amp;year=" +
+        year + "&amp;user=" + user;
+    xhr.open("POST", uri, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send();
+  }
+  else {
+    alert("You have to be signed in to add a movie to your list!");
+  }
+}
+
+// This function works when user is on search page.
+// Function saves the searched movie to their database.
+/**
+ * Saves a movie to the database with the current users information. This version of the function is used when dealing with data from the external API (omdbAPI)
+ * @param jsonFormat JSON-formatted data of the movie. Access to the data properties differs from the saveToUserDatabase()-function.
+ * @param user The user that is trying to save the movie.
+ */
+function saveToUserDatabaseSearch(jsonFormat, user) {
+
+  if(user !== null) {
+    let name = jsonFormat.Title;
+    let year = jsonFormat.Year;
+    let json;
+
+    // Send name and year to server, then server will find the movies info and add them to database.
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState == 4 &amp;&amp; xhr.status == 200) {
+        json = xhr.responseText;
+        let response = JSON.stringify(json);
+        alert(response);
+      } else if (xhr.status == 404 || xhr.status == 500) {
+        alert("Oops, couldn't save the movie... Sorry!");
+      }
+    };
+
+    let uri = "http://localhost:8080/saveMovieToDb?name=" + name + "&amp;year=" +
+        year + "&amp;user=" + user;
+    xhr.open("POST", uri, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send();
+  }
+  else {
+    alert("You have to be signed in to add a movie to your list!");
+  }
+}
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#accountValidate">accountValidate</a></li><li><a href="global.html#addMovieToDatabase">addMovieToDatabase</a></li><li><a href="global.html#clearFormMessage">clearFormMessage</a></li><li><a href="global.html#clearInputError">clearInputError</a></li><li><a href="global.html#clearInputs">clearInputs</a></li><li><a href="global.html#createAccount">createAccount</a></li><li><a href="global.html#jsonToMovieInfo">jsonToMovieInfo</a></li><li><a href="global.html#jsonToMovieInfoString">jsonToMovieInfoString</a></li><li><a href="global.html#openHome">openHome</a></li><li><a href="global.html#populateMovieList">populateMovieList</a></li><li><a href="global.html#populateMyMovieList">populateMyMovieList</a></li><li><a href="global.html#saveToUserDatabase">saveToUserDatabase</a></li><li><a href="global.html#saveToUserDatabaseSearch">saveToUserDatabaseSearch</a></li><li><a href="global.html#searchMovie">searchMovie</a></li><li><a href="global.html#setFormMessage">setFormMessage</a></li><li><a href="global.html#setInputError">setInputError</a></li><li><a href="global.html#showSearchResults">showSearchResults</a></li><li><a href="global.html#timeConvertToString">timeConvertToString</a></li><li><a href="global.html#validateCredential">validateCredential</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Tue May 04 2021 15:34:48 GMT+0300 (Itä-Euroopan kesäaika)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
