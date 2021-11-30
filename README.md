@@ -1,5 +1,7 @@
 # Moviesoftware Project 4.5.2021
 School project that had a time limit of 4 weeks. 
+This software uses an external API to get information about movies and lets the user to "collect" these movies and add them to their watched-list.
+So basically it's a collection for a user to see what he or she has seen and the software tells the user how much time they've spent on watching them.
 
 # JSON properties External API and Database
 
